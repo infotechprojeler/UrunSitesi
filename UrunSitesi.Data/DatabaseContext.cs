@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Diagnostics; // db oluşturma hatası için
 using UrunSitesi.Core.Entities;
 
 namespace UrunSitesi.Data
@@ -18,7 +18,7 @@ namespace UrunSitesi.Data
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB; Database=UrunSitesi; Trusted_Connection=True; TrustServerCertificate=True;");
 
             optionsBuilder.ConfigureWarnings(warnings =>
-        warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+        warnings.Ignore(RelationalEventId.PendingModelChangesWarning)); // db oluşturma hatası için
 
             base.OnConfiguring(optionsBuilder);
         }
