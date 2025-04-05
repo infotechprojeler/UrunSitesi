@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Threading.Tasks;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 using UrunSitesi.MVCWebUI.Tools;
@@ -21,13 +19,20 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         // GET: CategoriesController
         public ActionResult Index()
         {
-            return View(_dbContext.Categories);
+            return View(_dbContext.Categories.ToList());
         }
 
         // GET: CategoriesController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return BadRequest("Id alanı gereklidir!");
+            }
+            var model = _dbContext.Categories.Find(id);
+            if (model == null)
+                return NotFound("Kayıt Bulunamadı!");
+            return View(model);
         }
 
         // GET: CategoriesController/Create
@@ -61,17 +66,23 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         }
 
         // GET: CategoriesController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
             ViewBag.Kategoriler = new SelectList(_dbContext.Categories, "Id", "Name");
+            if (id == null)
+            {
+                return BadRequest("Id alanı gereklidir!");
+            }
             var model = _dbContext.Categories.Find(id);
+            if (model == null)
+                return NotFound("Kayıt Bulunamadı!");
             return View(model);
         }
 
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image)
+        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image, bool resmiSil)
         {
             if (ModelState.IsValid)
             {
@@ -79,6 +90,11 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
                 {
                     if (Image is not null)
                         collection.Image = FileHelper.FileLoader(Image);
+                    if (resmiSil == true)
+                    {
+                        collection.Image = string.Empty;
+                        FileHelper.FileRemover(collection.Image);
+                    }
                     _dbContext.Categories.Update(collection);
                     await _dbContext.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -92,23 +108,33 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         }
 
         // GET: CategoriesController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return BadRequest("Id alanı gereklidir!");
+            }
+            var model = _dbContext.Categories.Find(id);
+            if (model == null)
+                return NotFound("Kayıt Bulunamadı!");
+            return View(model);
         }
 
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Category collection)
         {
             try
             {
+                FileHelper.FileRemover(collection.Image);
+                _dbContext.Categories.Remove(collection);
+                _dbContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(collection);
             }
         }
     }

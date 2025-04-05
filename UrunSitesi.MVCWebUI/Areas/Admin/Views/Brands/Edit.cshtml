@@ -29,6 +29,9 @@
                 @if (!string.IsNullOrEmpty(Model.Logo))
                 {
                     <img src="/Images/@Model.Logo" alt="Resim Yok" height="58" title="@Model.Logo" />
+                    <label>
+                        @Html.CheckBox("resmiSil") Resmi Sil
+                    </label>
                 }
             </div>
             <div class="form-group form-check">

@@ -22,9 +22,16 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         }
 
         // GET: BrandsController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return BadRequest("Id alanı gereklidir!");
+            }
+            var model = _dbContext.Brands.Find(id);
+            if (model == null)
+                return NotFound("Kayıt Bulunamadı!");
+            return View(model);
         }
 
         // GET: BrandsController/Create
@@ -59,16 +66,22 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         }
 
         // GET: BrandsController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
+            if (id == null)
+            {
+                return BadRequest("Id alanı gereklidir!");
+            }
             var model = _dbContext.Brands.Find(id);
+            if (model == null)
+                return NotFound("Kayıt Bulunamadı!");
             return View(model);
         }
 
         // POST: BrandsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Brand collection, IFormFile? Logo)
+        public ActionResult Edit(int id, Brand collection, IFormFile? Logo, bool resmiSil)
         {
             if (ModelState.IsValid)
             {
@@ -77,6 +90,11 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
                     if (Logo is not null)
                     {                        
                         collection.Logo = FileHelper.FileLoader(Logo);
+                    }
+                    if (resmiSil == true)
+                    {
+                        collection.Logo = string.Empty;
+                        FileHelper.FileRemover(collection.Logo);
                     }
                     _dbContext.Brands.Update(collection);
                     _dbContext.SaveChanges();
