@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
+using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
+using UrunSitesi.MVCWebUI.Tools;
 
 namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
 {
@@ -29,43 +33,62 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         // GET: CategoriesController/Create
         public ActionResult Create()
         {
+            ViewBag.Kategoriler = new SelectList(_dbContext.Categories, "Id", "Name");
             return View();
         }
 
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Category collection, IFormFile? Image)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (Image is not null)
+                        collection.Image = FileHelper.FileLoader(Image);
+                    await _dbContext.Categories.AddAsync(collection);
+                    await _dbContext.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(collection);
         }
 
         // GET: CategoriesController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ViewBag.Kategoriler = new SelectList(_dbContext.Categories, "Id", "Name");
+            var model = _dbContext.Categories.Find(id);
+            return View(model);
         }
 
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (Image is not null)
+                        collection.Image = FileHelper.FileLoader(Image);
+                    _dbContext.Categories.Update(collection);
+                    await _dbContext.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(collection);
         }
 
         // GET: CategoriesController/Delete/5
