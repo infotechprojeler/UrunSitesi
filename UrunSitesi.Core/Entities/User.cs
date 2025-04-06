@@ -9,7 +9,7 @@ namespace UrunSitesi.Core.Entities
         public string? UserName { get; set; }
         [Display(Name = "Şifre"), StringLength(50), Required(ErrorMessage = "{0} Alanı Zorunludur!")]
         public string Password { get; set; }
-        [StringLength(50), Required(ErrorMessage = "{0} Alanı Zorunludur!")]
+        [StringLength(50), Required(ErrorMessage = "{0} Alanı Zorunludur!"), EmailAddress]
         public string Email { get; set; }
         [Display(Name = "Adı"), StringLength(50)]
         public string? Name { get; set; } // ? işareti bu alanın nullable yani boş geçilebilir olmasını sağlar

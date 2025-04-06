@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
@@ -6,7 +6,7 @@ using UrunSitesi.MVCWebUI.Tools;
 
 namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class SlidersController : Controller
     {
         private readonly DatabaseContext _dbContext;
@@ -121,10 +121,12 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         // POST: SlidersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Slider collection)
         {
             try
             {
+                _dbContext.Sliders.Remove(collection);
+                _dbContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

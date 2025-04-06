@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 using UrunSitesi.MVCWebUI.Tools;
 
 namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class BrandsController : Controller
     {
         private readonly DatabaseContext _dbContext;

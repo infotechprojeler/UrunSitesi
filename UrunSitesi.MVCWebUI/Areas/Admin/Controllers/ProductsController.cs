@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 using UrunSitesi.MVCWebUI.Tools;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
     public class ProductsController : Controller
     {
         private readonly DatabaseContext _dbContext;
