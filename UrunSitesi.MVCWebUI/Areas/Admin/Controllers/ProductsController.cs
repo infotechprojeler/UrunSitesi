@@ -129,10 +129,12 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Product collection)
         {
             try
             {
+                _dbContext.Products.Remove(collection);
+                _dbContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -1,12 +1,11 @@
-﻿@model UrunSitesi.Core.Entities.Product
+﻿@model Product
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Kaydı Silmek istiyor musunuz?";
 }
 
-<h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Product</h4>
+    <h4>Ürün</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -37,7 +36,7 @@
             @Html.DisplayNameFor(model => model.Image)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
+            <img src="/Images/@Model.Image" alt="Resim Yok" height="58" title="@Model.Image" />
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)
@@ -67,7 +66,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Sil" class="btn btn-danger" /> |
+        <a asp-action="Index">Listeye Dön</a>
     </form>
 </div>
