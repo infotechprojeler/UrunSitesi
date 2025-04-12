@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using UrunSitesi.Data;
 using UrunSitesi.MVCWebUI.Models;
 
 namespace UrunSitesi.MVCWebUI.Controllers
@@ -7,15 +8,17 @@ namespace UrunSitesi.MVCWebUI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DatabaseContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DatabaseContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_context.Sliders);
         }
 
         public IActionResult Privacy()

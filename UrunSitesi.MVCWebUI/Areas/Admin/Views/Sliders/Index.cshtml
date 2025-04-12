@@ -36,7 +36,7 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    <img src="/Images/@item.Image" height="41" alt="Resim Yok" />
+                    <img src="/Images/@item.Image" height="41" alt="Resim Yok" title="@item.Image" />
                 </td>
                 <td class="text-nowrap">
                     <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id" title="Düzenle">

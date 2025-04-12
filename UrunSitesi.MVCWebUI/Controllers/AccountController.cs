@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -17,10 +18,44 @@ namespace UrunSitesi.MVCWebUI.Controllers
         {
             _dbContext = dbContext;
         }
-
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            try
+            {
+                var userguid = User.FindFirst(ClaimTypes.UserData).Value;//FindFirst("UserData").Value;
+                var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid.ToString() == userguid);
+                if (userguid is null || kullanici == null) // eğer giriş yapan kullanıcıya atadığımız UserGuid değerine ulaşamazsak
+                {
+                    await HttpContext.SignOutAsync(); // oturumu kapat
+                    return RedirectToAction("Login"); // tekrar giriş ekranına yönlendir
+                }
+                return View(kullanici);
+            }
+            catch (Exception hata)
+            {
+                ModelState.AddModelError("", "Hata Oluştu! " + hata.Message);
+                return View();
+            }            
+        }
+        [HttpPost]
+        [Authorize]
+        public IActionResult Index(User user)
+        {
+            try
+            {
+                _dbContext.Users.Update(user);
+                _dbContext.SaveChanges();
+                TempData["Message"] = @$"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Kayıt Başarılı!</strong> Üye Kaydınız Başarıyla Güncellenmiştir.
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+</div>";
+            }
+            catch (Exception hata)
+            {
+                ModelState.AddModelError("", "Hata Oluştu! " + hata.Message);
+            }
+            return View(user);
         }
         [HttpGet]
         public IActionResult SignUp()

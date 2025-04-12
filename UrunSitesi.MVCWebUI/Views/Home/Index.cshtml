@@ -1,8 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Anasayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<partial name="_Carousel" />
+
+
+
+
+@section Scripts{
+    <script>
+        console.log("scripts çalışıyor"); // not: section Scripts partialde çalışmıyor! indexde çalışıyor.
+        $("#carouselExampleCaptions .carousel-item:first").addClass("active")
+    </script>
+}

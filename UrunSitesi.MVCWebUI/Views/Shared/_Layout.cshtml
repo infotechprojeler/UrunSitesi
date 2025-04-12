@@ -30,8 +30,16 @@
                         </li>
                     </ul>
                     <div class="col-md-3 text-end">
-                        <a href="/Account/Login" class="btn btn-outline-primary me-2">Giriş</a>
-                        <a href="/Account/SignUp" class="btn btn-primary">Üye Ol</a>
+                        @if (Context.User.Identity.IsAuthenticated)
+                        {
+                            <a href="/Account" class="btn btn-outline-primary me-2">Hesabım</a>
+                            <a href="/Account/Logout" class="btn btn-danger me-2">Oturumu Kapat</a>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-outline-primary me-2">Giriş</a>
+                            <a href="/Account/SignUp" class="btn btn-primary">Üye Ol</a>
+                        }
                     </div>
                 </div>
             </div>
