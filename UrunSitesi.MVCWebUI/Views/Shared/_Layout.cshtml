@@ -29,7 +29,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">İletişim</a>
                         </li>
                     </ul>
-                    <div class="col-md-3 text-end">
+                    <form action="/Products" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                        <input type="search" class="form-control" name="q" placeholder="Ara..." aria-label="Search">
+                    </form>
+                    <div class="text-end">
                         @if (Context.User.Identity.IsAuthenticated)
                         {
                             <a href="/Account" class="btn btn-outline-primary me-2">Hesabım</a>

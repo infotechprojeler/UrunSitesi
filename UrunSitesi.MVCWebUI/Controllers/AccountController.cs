@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 using UrunSitesi.MVCWebUI.Models;
