@@ -18,7 +18,12 @@ namespace UrunSitesi.MVCWebUI.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Sliders);
+            var model = new HomePageViewModel
+            {
+                Products = _context.Products,
+                Sliders = _context.Sliders
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()
