@@ -20,7 +20,7 @@ namespace UrunSitesi.MVCWebUI.Controllers
         {
             var model = new HomePageViewModel
             {
-                Products = _context.Products,
+                Products = _context.Products.Where(x => x.IsActive && x.IsHome),
                 Sliders = _context.Sliders
             };
             return View(model);
