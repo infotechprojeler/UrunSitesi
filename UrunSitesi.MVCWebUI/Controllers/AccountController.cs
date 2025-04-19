@@ -6,16 +6,19 @@ using System.Security.Claims;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 using UrunSitesi.MVCWebUI.Models;
+using UrunSitesi.Service;
 
 namespace UrunSitesi.MVCWebUI.Controllers
 {
     public class AccountController : Controller
     {
         private readonly DatabaseContext _dbContext;
+        private readonly IService<User> _userService;
 
-        public AccountController(DatabaseContext dbContext)
+        public AccountController(DatabaseContext dbContext, IService<User> userService)
         {
             _dbContext = dbContext;
+            _userService = userService;
         }
         [Authorize]
         public async Task<IActionResult> IndexAsync()
@@ -23,7 +26,8 @@ namespace UrunSitesi.MVCWebUI.Controllers
             try
             {
                 var userguid = User.FindFirst(ClaimTypes.UserData).Value;//FindFirst("UserData").Value;
-                var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid.ToString() == userguid);
+                // var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid.ToString() == userguid); 
+                var kullanici = await _userService.GetAsync(x => x.UserGuid.ToString() == userguid);
                 if (userguid is null || kullanici == null) // eğer giriş yapan kullanıcıya atadığımız UserGuid değerine ulaşamazsak
                 {
                     await HttpContext.SignOutAsync(); // oturumu kapat
@@ -43,8 +47,12 @@ namespace UrunSitesi.MVCWebUI.Controllers
         {
             try
             {
-                _dbContext.Users.Update(user);
-                _dbContext.SaveChanges();
+                // _dbContext.Users.Update(user);
+                // _dbContext.SaveChanges();
+
+                _userService.Update(user);
+                _userService.Save();
+
                 TempData["Message"] = @$"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
   <strong>Kayıt Başarılı!</strong> Üye Kaydınız Başarıyla Güncellenmiştir.
   <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
@@ -68,7 +76,10 @@ namespace UrunSitesi.MVCWebUI.Controllers
             {
                 try
                 {
-                    var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
+                    // var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
+                    
+                    var kullanici = await _userService.GetAsync(x => x.Email == user.Email);
+
                     if (kullanici != null)
                     {
                         ModelState.AddModelError("", "Bu Email ile Daha Önce Kayıt Olunmuş!");
@@ -78,8 +89,10 @@ namespace UrunSitesi.MVCWebUI.Controllers
                         user.IsActive = true;
                         user.IsAdmin = false;
                         user.CreateDate = DateTime.Now;
-                        await _dbContext.Users.AddAsync(user);
-                        await _dbContext.SaveChangesAsync();
+                        //await _dbContext.Users.AddAsync(user);
+                        //await _dbContext.SaveChangesAsync();
+                        await _userService.AddAsync(user);
+                        await _userService.SaveAsync();
                         TempData["Message"] = @$"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
   <strong>Kayıt Başarılı!</strong> Üye Kaydınız Başarıyla Tamamlanmıştır. Üye Girişi Yapabilirsiniz.
   <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
@@ -105,7 +118,8 @@ namespace UrunSitesi.MVCWebUI.Controllers
             {
                 try
                 {
-                    var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.IsActive && x.Email == model.Email && x.Password == model.Password);
+                    //var kullanici = await _dbContext.Users.FirstOrDefaultAsync(x => x.IsActive && x.Email == model.Email && x.Password == model.Password);
+                    var kullanici = await _userService.GetAsync(x => x.IsActive && x.Email == model.Email && x.Password == model.Password);
                     if (kullanici != null)
                     {
                         var haklar = new List<Claim>()
