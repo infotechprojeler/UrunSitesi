@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrunSitesi.Service", "UrunS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrunSitesi.WebAPI", "UrunSitesi.WebAPI\UrunSitesi.WebAPI.csproj", "{13B87E3D-BC72-4944-8875-13FF8EEAFD85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrunSitesi.WebAPIUsing", "UrunSitesi.WebAPIUsing\UrunSitesi.WebAPIUsing.csproj", "{74DDC63F-15E7-4CAF-8C2C-8F7047E93058}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{13B87E3D-BC72-4944-8875-13FF8EEAFD85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13B87E3D-BC72-4944-8875-13FF8EEAFD85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13B87E3D-BC72-4944-8875-13FF8EEAFD85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74DDC63F-15E7-4CAF-8C2C-8F7047E93058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74DDC63F-15E7-4CAF-8C2C-8F7047E93058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74DDC63F-15E7-4CAF-8C2C-8F7047E93058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74DDC63F-15E7-4CAF-8C2C-8F7047E93058}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
