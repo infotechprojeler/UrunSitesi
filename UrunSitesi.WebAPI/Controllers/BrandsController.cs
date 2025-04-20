@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,34 +18,44 @@ namespace UrunSitesi.WebAPI.Controllers
         }
         // GET: api/<BrandsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Brand> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _dbContext.Brands;
         }
 
         // GET api/<BrandsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Brand Get(int id)
         {
-            return "value";
+            return _dbContext.Brands.Find(id);
         }
 
         // POST api/<BrandsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Brand value)
         {
+            _dbContext.Brands.Add(value);
+            _dbContext.SaveChanges();
         }
 
         // PUT api/<BrandsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Brand value)
         {
+            _dbContext.Brands.Update(value);
+            _dbContext.SaveChanges();
         }
 
         // DELETE api/<BrandsController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            var kayit = _dbContext.Brands.Find(id);
+            if (kayit != null)
+            {
+                _dbContext.Brands.Remove(kayit);
+                _dbContext.SaveChanges();
+            }
         }
     }
 }
