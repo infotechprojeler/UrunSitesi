@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UrunSitesi.Core.Entities;
+using UrunSitesi.WebAPIUsing.Tools;
 
 namespace UrunSitesi.WebAPIUsing.Areas.Admin.Controllers
 {
@@ -19,9 +20,10 @@ namespace UrunSitesi.WebAPIUsing.Areas.Admin.Controllers
         }
 
         // GET: BrandsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> DetailsAsync(int id)
         {
-            return View();
+            var model = await httpClient.GetFromJsonAsync<Brand>(_apiAdres + id);
+            return View(model);
         }
 
         // GET: BrandsController/Create
@@ -33,43 +35,72 @@ namespace UrunSitesi.WebAPIUsing.Areas.Admin.Controllers
         // POST: BrandsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Brand collection, IFormFile? Logo)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (Logo is not null)
+                    {
+                        collection.Logo = FileHelper.FileLoader(Logo);
+                    }
+                    var response = await httpClient.PostAsJsonAsync(_apiAdres, collection);
+                    if (response.IsSuccessStatusCode) // eğer api den işlem başarılı mesajı dönerse
+                        return RedirectToAction(nameof(Index));
+                    ModelState.AddModelError("", "Kayıt Başarısız!");
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(collection);
         }
 
         // GET: BrandsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
-            return View();
+            var model = await httpClient.GetFromJsonAsync<Brand>(_apiAdres + id);
+            return View(model);
         }
 
         // POST: BrandsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditAsync(int id, Brand collection, IFormFile? Logo, bool resmiSil)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (Logo is not null)
+                    {
+                        collection.Logo = FileHelper.FileLoader(Logo);
+                    }
+                    if (resmiSil == true)
+                    {
+                        collection.Logo = string.Empty;
+                        FileHelper.FileRemover(collection.Logo);
+                    }
+                    var response = await httpClient.PutAsJsonAsync(_apiAdres, collection);
+                    if (response.IsSuccessStatusCode)
+                        return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            ModelState.AddModelError("", "Kayıt Başarısız!");
+            return View(collection);
         }
 
         // GET: BrandsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            return View();
+            var model = await httpClient.GetFromJsonAsync<Brand>(_apiAdres + id);
+            return View(model);
         }
 
         // POST: BrandsController/Delete/5
