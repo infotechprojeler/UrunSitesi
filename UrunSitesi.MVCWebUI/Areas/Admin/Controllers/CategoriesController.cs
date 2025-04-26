@@ -63,6 +63,7 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
+            ViewBag.Kategoriler = new SelectList(_dbContext.Categories, "Id", "Name");
             return View(collection);
         }
 
@@ -105,6 +106,7 @@ namespace UrunSitesi.MVCWebUI.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
+            ViewBag.Kategoriler = new SelectList(_dbContext.Categories, "Id", "Name");
             return View(collection);
         }
 

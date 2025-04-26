@@ -1,7 +1,16 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient(); // HttpClient nesnesini servis olarak kullanabilmek için
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+{
+    x.Cookie.Name = "UrunSitesi"; // oluþacak cookie nin ismi UrunSitesi olsun
+});
 
 var app = builder.Build();
 

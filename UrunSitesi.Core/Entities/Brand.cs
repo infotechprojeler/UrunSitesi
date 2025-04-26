@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace UrunSitesi.Core.Entities
 {
@@ -15,6 +16,7 @@ namespace UrunSitesi.Core.Entities
         public DateTime? CreateDate { get; set; } = DateTime.Now;
         [Display(Name = "Durum")]
         public bool IsActive { get; set; }
+        [JsonIgnore]
         public IList<Product>? Products { get; set; }
     }
 }

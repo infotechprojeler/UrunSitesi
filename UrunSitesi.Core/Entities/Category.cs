@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace UrunSitesi.Core.Entities
 {
@@ -19,6 +20,7 @@ namespace UrunSitesi.Core.Entities
         public bool IsTopMenu { get; set; }
         [Display(Name = "Üst Kategori")]
         public int ParentId { get; set; }
+        [JsonIgnore]
         public IList<Product>? Products { get; set; }
     }
 }

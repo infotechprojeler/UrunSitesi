@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 
@@ -19,14 +19,21 @@ namespace UrunSitesi.WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Product> Get()
         {
-            return _dbContext.Products;
+            var model = _dbContext.Products // veritabanından ürün listesini çek
+                .Include(c => c.Category)  // ürünlere kategorilerini dahil et
+                .Include(c => c.Brand);
+            return model;
         }
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> Get(int id)
         {
-            var model = await _dbContext.Products.FindAsync(id);
+            var model = _dbContext.Products
+                .Where(c => c.Id == id)
+                .Include(c => c.Category)
+                .Include(c => c.Brand)
+                .FirstOrDefault();
             if (model != null)
                 return model;
             return NotFound("Kayıt Bulunamadı!");

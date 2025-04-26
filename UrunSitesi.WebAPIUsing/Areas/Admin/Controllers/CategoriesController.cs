@@ -1,50 +1,54 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.WebAPIUsing.Tools;
 
 namespace UrunSitesi.WebAPIUsing.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize]
-    public class BrandsController : Controller
+    public class CategoriesController : Controller
     {
-        string _apiAdres = "https://localhost:7279/api/Brands/";
-        HttpClient httpClient = new HttpClient(); // api ye istek atmamızı sağlayacak sınıfımız.
+        string _apiAdres = "https://localhost:7279/api/Categories/";
+        private readonly HttpClient _httpClient;
 
-        // GET: BrandsController
+        public CategoriesController(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         public async Task<ActionResult> Index()
         {
-            var model = await httpClient.GetFromJsonAsync<List<Brand>>(_apiAdres);
+            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
             return View(model);
         }
 
-        // GET: BrandsController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            var model = await httpClient.GetFromJsonAsync<Brand>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
             return View(model);
         }
 
-        // GET: BrandsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> CreateAsync()
         {
+            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
+            ViewBag.Kategoriler = new SelectList(model, "Id", "Name");
             return View();
         }
 
-        // POST: BrandsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Brand collection, IFormFile? Logo)
+        public async Task<ActionResult> Create(Category collection, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Logo is not null)
+                    if (Image is not null)
                     {
-                        collection.Logo = FileHelper.FileLoader(Logo);
+                        collection.Image = FileHelper.FileLoader(Image);
                     }
-                    var response = await httpClient.PostAsJsonAsync(_apiAdres, collection);
+                    var response = await _httpClient.PostAsJsonAsync(_apiAdres, collection);
                     if (response.IsSuccessStatusCode) // eğer api den işlem başarılı mesajı dönerse
                         return RedirectToAction(nameof(Index));
                     ModelState.AddModelError("", "Kayıt Başarısız!");
@@ -54,64 +58,65 @@ namespace UrunSitesi.WebAPIUsing.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
+            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
+            ViewBag.Kategoriler = new SelectList(model, "Id", "Name");
             return View(collection);
         }
 
-        // GET: BrandsController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            var model = await httpClient.GetFromJsonAsync<Brand>(_apiAdres + id);
+            var model1 = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
+            ViewBag.Kategoriler = new SelectList(model1, "Id", "Name");
+
+            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
             return View(model);
         }
 
-        // POST: BrandsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Brand collection, IFormFile? Logo, bool resmiSil)
+        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image, bool resmiSil)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Logo is not null)
+                    if (Image is not null)
                     {
-                        collection.Logo = FileHelper.FileLoader(Logo);
+                        collection.Image = FileHelper.FileLoader(Image);
                     }
                     if (resmiSil == true)
                     {
-                        collection.Logo = string.Empty;
-                        FileHelper.FileRemover(collection.Logo);
+                        collection.Image = string.Empty;
+                        FileHelper.FileRemover(collection.Image);
                     }
-                    var response = await httpClient.PutAsJsonAsync(_apiAdres + id, collection);
-                    if (response.IsSuccessStatusCode)
+                    var response = await _httpClient.PutAsJsonAsync(_apiAdres + id, collection);
+                    if (response.IsSuccessStatusCode) // eğer api den işlem başarılı mesajı dönerse
                         return RedirectToAction(nameof(Index));
                     ModelState.AddModelError("", "Kayıt Başarısız!");
-                    ViewBag.Hata = response.StatusCode;
                 }
                 catch
                 {
                     ModelState.AddModelError("", "Hata Oluştu!");
                 }
             }
-            
+            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
+            ViewBag.Kategoriler = new SelectList(model, "Id", "Name");
             return View(collection);
         }
 
-        // GET: BrandsController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var model = await httpClient.GetFromJsonAsync<Brand>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
             return View(model);
         }
 
-        // POST: BrandsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, Brand collection)
+        public async Task<ActionResult> DeleteAsync(int id, Category collection)
         {
             try
             {
-                var response = await httpClient.DeleteAsync(_apiAdres + id);
+                var response = await _httpClient.DeleteAsync(_apiAdres + id);
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction(nameof(Index));
             }
@@ -121,5 +126,6 @@ namespace UrunSitesi.WebAPIUsing.Areas.Admin.Controllers
             }
             return View(collection);
         }
+
     }
 }

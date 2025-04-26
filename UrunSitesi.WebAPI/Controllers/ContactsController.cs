@@ -58,6 +58,8 @@ namespace UrunSitesi.WebAPI.Controllers
             var kayit = _contactService.Find(id);
             if (kayit != null)
             {
+                _contactService.Delete(kayit);
+                _contactService.Save();
                 return Ok(kayit);
             }
             return NotFound();

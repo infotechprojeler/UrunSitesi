@@ -17,9 +17,6 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Image)
             </th>
             <th></th>
@@ -31,9 +28,6 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
                     <img src="/Images/@item.Image" height="41" alt="Resim Yok" title="@item.Image" />
