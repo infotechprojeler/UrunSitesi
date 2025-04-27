@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrunSitesi.Core.Entities;
 using UrunSitesi.Data;
 
@@ -6,6 +7,7 @@ namespace UrunSitesi.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BrandsController : ControllerBase
     {
         private readonly DatabaseContext _dbContext;

@@ -1,0 +1,32 @@
+﻿@model HomePageViewModel
+
+@{
+    ViewData["Title"] = "Anasayfa";
+}
+
+<partial name="_Carousel" model="Model.Sliders" />
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2>Sizin İçin Seçtiklerimiz</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <partial name="_Products" model="Model.Products.Where(p => p.IsActive && p.IsHome)" />
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2>En Yeni Ürünlerimiz</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <partial name="_Products" model="Model.Products.Where(p => p.IsActive).OrderByDescending(x => x.Id).Take(4)" />
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        //console.log("scripts çalışıyor"); // not: section Scripts partialde çalışmıyor! indexde çalışıyor.
+        $("#carouselExampleCaptions .carousel-item:first").addClass("active")
+    </script>
+}

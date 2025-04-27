@@ -25,6 +25,16 @@ namespace UrunSitesi.WebAPI.Controllers
             return model;
         }
 
+        [HttpGet("Search/{q}")] // diğer get ile çakışmaması için bu action a search ismini verdik
+        public IEnumerable<Product> Search(string q = "")
+        {
+            var model = _dbContext.Products
+                .Where(p => p.Name.Contains(q))
+                .Include(c => c.Category)
+                .Include(c => c.Brand);
+            return model;
+        }
+
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> Get(int id)

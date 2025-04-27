@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using UrunSitesi.Data;
 using UrunSitesi.Service;
 
@@ -16,6 +17,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<DatabaseContext>();
 
 builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+{
+    x.Cookie.Name = "UrunSitesi"; // oluþacak cookie nin ismi UrunSitesi olsun
+});
 
 var app = builder.Build();
 
