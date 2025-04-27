@@ -21,7 +21,7 @@ namespace UrunSitesi.MVCWebUI.Controllers
             _userService = userService;
         }
         [Authorize]
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace UrunSitesi.MVCWebUI.Controllers
             {
                 ModelState.AddModelError("", "Hata Oluştu! " + hata.Message);
                 return View();
-            }            
+            }
         }
         [HttpPost]
         [Authorize]
