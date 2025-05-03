@@ -10,7 +10,7 @@ namespace UrunSitesi.WebAPIUsing.Controllers
 {
     public class AccountController : Controller
     {
-        string _apiAdres = "https://localhost:7279/api/Auth/";
+        string _apiAdres = "https://localhost:7279/api/users/";
         private readonly HttpClient _httpClient;
 
         public AccountController(HttpClient httpClient)
@@ -138,9 +138,9 @@ namespace UrunSitesi.WebAPIUsing.Controllers
                     else
                         ModelState.AddModelError("", "Giriş Başarısız!");
                 }
-                catch (Exception)
+                catch (Exception hata)
                 {
-                    ModelState.AddModelError("", "Hata Oluştu!");
+                    ModelState.AddModelError("", "Hata Oluştu!" + hata.Message);
                 }
             }
             return View(userLoginModel);

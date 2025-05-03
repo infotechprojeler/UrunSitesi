@@ -7,7 +7,7 @@ namespace UrunSitesi.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize] // BrandsController daki tüm action ları koruma altına aldık. Jwt token sistemi ile oturum açarak token lı istek yapmadan buradaki metotları kullanamayız.
     public class BrandsController : ControllerBase
     {
         private readonly DatabaseContext _dbContext;

@@ -17,6 +17,9 @@ namespace UrunSitesi.Data
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB; Database=UrunSitesi; Trusted_Connection=True; TrustServerCertificate=True;");
 
+            // Canlı connection string
+            // optionsBuilder.UseSqlServer(@"Server=mssql.duygunundunyasi.com.tr; Database=UrunSitesi; Uid=duygunundunyasi; Pwd=duygunundunyasi123; TrustServerCertificate=True;");
+
             optionsBuilder.ConfigureWarnings(warnings =>
         warnings.Ignore(RelationalEventId.PendingModelChangesWarning)); // db oluşturma hatası için
 

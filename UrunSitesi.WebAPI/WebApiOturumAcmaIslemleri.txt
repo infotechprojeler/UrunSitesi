@@ -1,0 +1,19 @@
+﻿Web api de oturum ile güvenlik işlemleri:
+
+* UrunSitesi.WebAPI projemize nuget üzerinden JwtBearer paketini yüklüyoruz
+
+* UrunSitesi.WebAPI projemizin program.cs dosyasında JwtBearer ayarlarını yapılandırıyoruz.
+
+* UrunSitesi.WebAPI projemizdeki controllers a oturum açma ve kayıt işlemleri için AuthController ı ekliyoruz.
+
+* Oturum ile kayıt listeleme işlemi için Postman ı kullanıyoruz.
+
+* https://localhost:7279/api/auth/login e Post ile email ve password ü db de var olan kullanıcılardan alarak postman üzerinden gönderiyoruz.
+
+* Bu metot bize bir Token üretip gönderiyor. Bu token ı kopyalayıp Postman de örnek olarak kullandığımız brands isteğine ekliyoruz.
+
+* Postman de brands e gönderdiğimiz istekte Authorization sekmesini seçip oradaki listeden bearer ı seçtiğimizde sağda kod kutucuğu geliyor token kodunu oraya yapıştırıp brands e isteği gönderiyoruz.
+
+* Eğer token süresi dolmadıysa markaların json olarak listelenmesi lazım yoksa 401 hatası alırız.
+
+* Eğer Token süresi dolarsa oturum açarken bize gönderilen refresh token ı kullanarak kullanıcıyı bulup yeniden oturum açtırabiliriz.
