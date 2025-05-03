@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using UrunSitesi.Data;
 using UrunSitesi.Service;
 
@@ -18,9 +21,21 @@ builder.Services.AddDbContext<DatabaseContext>();
 
 builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
-    x.Cookie.Name = "UrunSitesi"; // oluþacak cookie nin ismi UrunSitesi olsun
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        // Token = Jeton
+        //Validasyon yapmak istediðimiz alanlar
+        ValidateAudience = true, // Kitleyi Doðrula
+        ValidateIssuer = true, // Tokený vereni doðrula
+        ValidateLifetime = true, // Token yaþam süresini doðrula
+        ValidateIssuerSigningKey = true, // Tokený verenin imzalama anahtarini Doðrula
+        ValidIssuer = builder.Configuration["Token:Issuer"], // Tokený veren saglayici
+        ValidAudience = builder.Configuration["Token:Audience"], // Tokený kullanacak kullanici
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])), // Tokený imzalama Anahtari
+        ClockSkew = TimeSpan.Zero // saat farký olmasýn
+    };
 });
 
 var app = builder.Build();
