@@ -37,6 +37,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    // this defines a CORS policy called "default"
+    options.AddPolicy("default", policy =>
+    {
+        policy
+            .AllowAnyOrigin() // tümüne izin ver
+                              // .WithOrigins("https://localhost:7262") // sadece bu domainlere izin ver
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,5 +63,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// UseCors
+app.UseCors("default");
 
 app.Run();

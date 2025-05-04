@@ -8,5 +8,13 @@ namespace UrunSitesi.WebAPIUsing.Controllers
         {
             return View();
         }
+        public IActionResult Detail(int? id)
+        {
+            if (id is null)
+            {
+                return BadRequest("Geçersiz İstek!");
+            }
+            return View();
+        }
     }
 }
